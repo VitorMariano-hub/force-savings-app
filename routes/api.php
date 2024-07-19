@@ -18,4 +18,8 @@ Route::prefix('v1')->group(function () {
     Route::resource('debts', DebtController::class);
     Route::resource('payments', PaymentController::class);
     Route::resource('notifications', NotificationController::class);
-});
+
+    Route::post('debts/request-contract', [DebtController::class, 'requestContract']);
+    Route::post('payments/simulate', [PaymentController::class, 'simulatePayment']);
+    Route::post('notifications/send-reminder', [NotificationController::class, 'sendPaymentReminder']);
+})->middleware('auth:sanctum');
