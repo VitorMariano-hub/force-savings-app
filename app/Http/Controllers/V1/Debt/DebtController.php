@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\V1\Debt;
 
 use App\Http\Controllers\Controller;
-use App\Models\Debt;
+use App\Models\Debt as Model;
 use Illuminate\Http\Request;
 
 class DebtController extends Controller
@@ -35,21 +35,26 @@ class DebtController extends Controller
         return response()->json(null, 204);
     }
 
-    public function requestContract(Request $request)
-    {       
-        $userId = $request->user_id;
-        $amount = $request->total_amount;
-        $term_months = $request->term_months;
-        $type = $request->type;
+    public function contractPayment(Request $request)
+    {
+        try {
+            $validator = Model::validate($request->all());
 
-        $debt = Debt::create([
-            'user_id' => $userId,
-            'type' => $type,
-            'total_amount' => $amount,
-            'term_months' => $term_months,
-        ]);
+            if ($validator->fails()) {
+                return response()->json(['errors' => $validator->errors()], 422);
+            }
 
-        return response()->json($debt, 201);
+            $debt = Model::create([
+                'user_id' => $request->user_id,
+                'type' => $request->type,
+                'total_amount' => $request->total_amount,
+                'term_months' => $request->term_months,
+            ]);
+
+            return response()->json($debt, 201);
+        } catch (\Throwable $th) {
+            return response()->json(['error' => $th->getMessage()], 500);
+        }
     }
 
 }
