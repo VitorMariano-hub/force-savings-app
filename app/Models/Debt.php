@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Validator;
 
 class Debt extends Model
 {
@@ -20,6 +21,22 @@ class Debt extends Model
         'total_amount',
         'term_months',
     ];
+    
+    /**
+     * Validates the given data using the provided validation rules.
+     *
+     * @param array $data The data to be validated.
+     * @return \Illuminate\Contracts\Validation\Validator The validation object.
+     */
+    public static function validate($data)
+    {
+        return Validator::make($data, [
+            'user_id' => 'required|exists:users,id',  
+            'type' => 'required|string',
+            'total_amount' => 'required|numeric',
+            'term_months' => 'required|integer|min:1',
+        ]);
+    }
 
     /**
      * Get the user that owns the debt.
