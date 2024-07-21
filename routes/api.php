@@ -19,10 +19,9 @@ Route::prefix('v1')->group(function () {
     Route::resource('debts', DebtController::class);
     Route::resource('payments', PaymentController::class);
     Route::resource('notifications', NotificationController::class);
-
     Route::post('debts/contract-payment', [DebtController::class, 'contractPayment']);
     Route::post('payments/simulate', [PaymentController::class, 'simulatePayment']);
     Route::post('notifications/send-reminder', [NotificationController::class, 'sendPaymentReminder']);
     Route::post('contracts/generator-contract', [ContractController::class, 'generatorContract']);
-
+    Route::post('contracts/create-contract/{user_id}', [ContractController::class, 'createContract']);
 })->middleware('auth:sanctum');
